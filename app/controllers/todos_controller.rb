@@ -1,4 +1,5 @@
 class TodosController < ApplicationController
+  skip_before_action :verify_authenticity_token
   def index
     @todos = Todo.all
 
@@ -12,22 +13,17 @@ class TodosController < ApplicationController
   def create
     @todo = Todo.new(todo_params)
     @todo.save
-
-    redirect_to todos_path
   end
 
   def update
     @todo = Todo.find(params[:id])
     @todo.update_attributes(todo_params)
-
-    redirect_to todos_path
   end
 
   def destroy
     @todo = Todo.find(params[:id])
     @todo.destroy
-
-    redirect_to todos_path
+    render :json => { :id => @todo.id }
   end
 
   def toggle_check
@@ -36,7 +32,10 @@ class TodosController < ApplicationController
     # 加上驚歎號表示會直接存入資料庫（否則要另外 save)
     # ref: http://api.rubyonrails.org/classes/ActiveRecord/Persistence.html#method-i-toggle
     @todo.toggle!(:done)
-    redirect_to todos_path
+  end
+
+  def edit
+    @todo = Todo.find(params[:id])
   end
 
   private
