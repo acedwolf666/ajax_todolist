@@ -1,5 +1,5 @@
 class TodosController < ApplicationController
-  skip_before_action :verify_authenticity_token
+  #skip_before_action :verify_authenticity_token 用了index.html.erb裏的$.ajaxSetup function 代替
   def index
     @todos = Todo.all
 
