@@ -13,11 +13,13 @@ class TodosController < ApplicationController
   def create
     @todo = Todo.new(todo_params)
     @todo.save
+    render :json => { :id => @todo.id, :title => @todo.title }
   end
 
   def update
     @todo = Todo.find(params[:id])
     @todo.update_attributes(todo_params)
+    render :json => { :id => @todo.id, :title => @todo.title }
   end
 
   def destroy
@@ -36,6 +38,7 @@ class TodosController < ApplicationController
 
   def edit
     @todo = Todo.find(params[:id])
+    render :json => { :id => @todo.id, :title => @todo.title }
   end
 
   private
