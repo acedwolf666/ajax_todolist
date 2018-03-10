@@ -1,13 +1,7 @@
 class TodosController < ApplicationController
   #skip_before_action :verify_authenticity_token 用了index.html.erb裏的$.ajaxSetup function 代替
   def index
-    @todos = Todo.all
-
-    if params[:id]
-      @todo = Todo.find(params[:id])
-    else
-      @todo = Todo.new
-    end
+    @todos = Todo.order("id DESC").limit(15)
   end
 
   def create
@@ -42,6 +36,19 @@ class TodosController < ApplicationController
     render :json => { :id => @todo.id, :title => @todo.title }
   end
 
+  def load
+    if params[:current_id]
+      @todos = Todo.where( "id < ?", params[:current_id]).order("id DESC").limit(10)
+      render json: {
+        data: @todos.map do |todo| {
+          id: todo.id,
+          title: todo.title,
+          done: todo.done
+        }
+        end
+      }
+    end
+  end
   private
 
   def todo_params
